@@ -14,13 +14,13 @@ m = 1;          % Mass (kg)
 k = 10;         % Spring constant (N/m)
 c = 1;          % Damping coefficient (Ns/m)
 v = 0;
-
+f = waitbar(0, 'Starting');
 % Discretize the state space and action space
-modelBased=1; % How much of the episodes for model learning
+modelBased=0.8; % How much of the episodes for model learning
 range_=1;
 num_states = 100;    % Number of discrete states
 num_actions = 3;     % Number of discrete actions (push left, no force, right)
-num_episodes = 1000;  % Number of episodes
+num_episodes = 5000;  % Number of episodes
 alpha = 0.1;         % Learning rate
 gamma = 0.9;         % Discount factor
 epsilon = 0.1;       % Exploration rate
@@ -28,11 +28,15 @@ max_steps = 3000;     % Maximum number of steps per episode
 position = zeros(max_steps,1);   % Position
 distance_to_target = zeros(max_steps,1); % #########################
 target_position = 0.3;  % Specific target position
+x=0; %Initial Position
 act=zeros(max_steps,1);
 V=zeros(max_steps,1);
 % Initialize Q-values
 Q = zeros(num_states, num_actions); % using Q-table
 QQ= zeros(num_states, num_actions, num_episodes);
+
+errorMax=1*range_;
+errorMin=-1*range_;
 
 rewardAmp=2; %reward amplification
 % or randi
@@ -44,10 +48,17 @@ simulate_system = @(state, action, v, x, target_position) simulate_mass_spring_d
 
 % Dyna-Q learning
 for episode = 1:num_episodes
-    state = randi(num_states); % Start in a random state for each episode
+    %state = randi(num_states); % Start in a random state for each episode
     %state = 200;
     v=0;
-    x = range_*(state - 1) / (num_states - 1);
+    %x = range_*(state - 1) / (num_states - 1);
+    %x=rand()*range_;
+    target_position=rand()*range_;
+
+    d2t = (x - target_position);
+    error = max(errorMin, min(errorMax,d2t)); % Clipped
+    state = round(((num_states-1)/(errorMax-errorMin))*(error-errorMin) + 1);
+
     %x=rand();
     for step = 1:max_steps
         % Epsilon-greedy action selection
@@ -92,6 +103,7 @@ for episode = 1:num_episodes
     end
 
     QQ(:,:,episode)=Q;
+    waitbar(episode/num_episodes, f, sprintf('Progress: %d %%', floor((episode/num_episodes)*100)));
 end
 
 % final episodes

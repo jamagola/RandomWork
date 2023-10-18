@@ -1,13 +1,19 @@
 position_ = zeros(max_steps,1);   % Position
 distance_to_target_ = zeros(max_steps,1); % #########################
-target_position_ = 0.3;  % Specific target position
+target_position_ = 0.5;  % Specific target position
+x=0; %Initial Position
 act_=zeros(max_steps,1);
 V_=zeros(max_steps,1);
 
-state = randi(num_states); % Start in a random state for each episode
+%state = randi(num_states); % Start in a random state for each episode
 %state = 200;
 v=0;
-x = range_*(state - 1) / (num_states - 1);
+%x = range_*(state - 1) / (num_states - 1);
+%x=rand()*range_;
+
+d2t = (x - target_position);
+error = max(errorMin, min(errorMax,d2t)); % Clipped
+state = round(((num_states-1)/(errorMax-errorMin))*(error-errorMin) + 1);
 
 for step = 1:max_steps
     [~, action] = max(Q(state, :)); % Exploit
