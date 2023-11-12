@@ -1,6 +1,6 @@
 position_ = zeros(max_steps,1);   % Position
 distance_to_target_ = zeros(max_steps,1); % #########################
-target_position_ = 0.5;  % Specific target position
+target_position_ = 0.8;  % Specific target position
 x=0; %Initial Position
 act_=zeros(max_steps,1);
 V_=zeros(max_steps,1);

@@ -1,13 +1,13 @@
 % Function to simulate the mass-spring-damper system dynamics
 function [next_state, x, v, d2t] = simulate_mass_spring_damper(state, action, num_states, m, k, c, v, x, target_position)
     % Convert state to continuous variables (position and velocity)
-    range_=1;
+    range_=2;
     errorMax=1*range_;
     errorMin=-1*range_;
     %x = range_*(state - 1) / (num_states - 1);
     
-    if x == 0
-        %v = 0; % V always zero? No
+    if (x <=-range_/2) || (x >=range_/2) 
+        v = 0; % V always zero? No
     end
 
     F=10;
@@ -26,10 +26,10 @@ function [next_state, x, v, d2t] = simulate_mass_spring_damper(state, action, nu
     v = v + acceleration * dt;
     x = x + v * dt;
     
-    % Clip position to valid range [0, range_]
-    x_ = max(0, min(range_, x));
-    %x=x_;
-    d2t = (x - target_position);
+    % Clip position to valid range [-range_/2, range_/2] Symmetry
+    x_ = max(-range_/2, min(range_/2, x));
+    x=x_;
+    d2t = -(target_position - x);
     error = max(errorMin, min(errorMax,d2t)); % Clipped
     % Convert position and velocity back to the discrete state space
     % next_state = round(((x_ *(num_states-1))/range_+1));
