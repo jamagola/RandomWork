@@ -1,6 +1,6 @@
 position_ = zeros(max_steps,1);   % Position
 distance_to_target_ = zeros(max_steps,1); % #########################
-target_position_ = 0.8;  % Specific target position
+target_position_ = -0.8 % Specific target position
 x=0; %Initial Position
 act_=zeros(max_steps,1);
 V_=zeros(max_steps,1);
@@ -17,7 +17,8 @@ state = round(((num_states-1)/(errorMax-errorMin))*(error-errorMin) + 1);
 
 for step = 1:max_steps
     [~, action] = max(Q(state, :)); % Exploit
- 
+    %Q_=QQ(:,:,250); % 250 episode is the last episode before model develop
+    %[~, action] = max(Q_(state, :)); % Exploit
     % Simulate the environment (mass-spring-damper system)
     
 

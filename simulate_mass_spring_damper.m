@@ -1,7 +1,7 @@
 % Function to simulate the mass-spring-damper system dynamics
 function [next_state, x, v, d2t] = simulate_mass_spring_damper(state, action, num_states, m, k, c, v, x, target_position)
     % Convert state to continuous variables (position and velocity)
-    range_=2;
+    range_=2; % -1 to 1
     errorMax=1*range_;
     errorMin=-1*range_;
     %x = range_*(state - 1) / (num_states - 1);
